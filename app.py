@@ -72,8 +72,6 @@ def onedrive():
     Thread(target=dump_onenote, args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
 
     return render_template('tkt.html')
-    
-
 
 
 if __name__ == "__main__":
