@@ -1,1 +1,12 @@
+#venv
+pyvenv.cfg
+lib/*
+lib64
+bin/*
+
+__pycache__/*
+extractor/__pycache__
+
+.env
 data/*
+flask_session/*

@@ -1,4 +1,3 @@
-from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, session, url_for, jsonify
 from flask_session import Session
 from extractor.onenote import dump_onenote
@@ -10,12 +9,10 @@ import requests
 import app_config
 
 
-
-
 app = Flask(__name__)
 app.config.from_object(app_config)
 Session(app)
-load_dotenv()
+
 
 # This section is needed for url_for("foo", _external=True) to automatically
 # generate http scheme when this sample is running on localhost,
@@ -62,21 +59,6 @@ def index():
     if not auth.get_user():
         return redirect(url_for("login"))
     return render_template('index.html', user=auth.get_user(), version=identity.__version__)
-
-
-@app.route("/call_downstream_api")
-def call_downstream_api():
-    token = auth.get_token_for_user(app_config.SCOPE)
-    print("TOKEN",token)
-    if "error" in token:
-        return redirect(url_for("login"))
-    # Use access token to call downstream api
-    api_result = requests.get(
-        app_config.ENDPOINT,
-        headers={'Authorization': 'Bearer ' + token['access_token']},
-        timeout=30,
-    ).json()
-    return render_template('display.html', result=api_result)
 
 @app.route("/onenote")
 def onedrive():

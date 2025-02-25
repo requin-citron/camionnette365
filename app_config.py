@@ -1,4 +1,7 @@
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 # Application (client) ID of app registration
 CLIENT_ID = os.getenv("CLIENT_ID")
