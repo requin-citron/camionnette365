@@ -1,4 +1,4 @@
-from os         import mkdir, path, getcwd
+from os         import path, getcwd
 from app_config import EXTRACT_DIR
 from extractor.utils      import mkdir_if_exist
 
@@ -55,7 +55,7 @@ def download_page(access_token, page_id):
     return html_page
 
 def dump_onenote(access_token, user):
-    extract_path = path.join(getcwd(), EXTRACT_DIR, user.replace("..",""))
+    extract_path = path.join(getcwd(), EXTRACT_DIR, "onenote",user.replace("..",""))
     mkdir_if_exist(extract_path)
     
     for notebook in get_notebook(access_token):

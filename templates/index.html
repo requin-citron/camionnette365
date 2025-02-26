@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Microsoft Identity Python Web App: Index</title>
+    <title>Camionnette365 Web App: Index</title>
 </head>
 <body>
-    <h1>Microsoft Identity Python Web App</h1>
+    <h1>Camionnette365 Web App</h1>
     <h2>Welcome {{ user.get("name") }}!</h2>
 
     <ul>
     {% if config.get("ENDPOINT") %}
-      <li><a href='/onenote'>Dump OneDrive</a></li>
+      <li><a href='/onenote'>Dump OneNote</a></li>
+      <li><a href='/onedrive'>Dump OneDrive</a></li>
+      <li><a href='/oneall'>Dump All</a></li>
     {% endif %}
 
     {% if config.get("B2C_PROFILE_AUTHORITY") %}
