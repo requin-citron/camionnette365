@@ -25,7 +25,7 @@ ENDPOINT = 'https://graph.microsoft.com/v1.0/users'  # This resource requires no
 SCOPE = [
     "User.ReadBasic.All",  # users                 dump
     "Notes.ReadWrite.All", # oneNote               dump
-    "Files.Read.All ",     # oneDrive sharepoint    dump
+    "Files.Read.All ",     # oneDrive sharepoint   dump
     ]
 
 # Tells the Flask-session extension to store sessions in the filesystem

