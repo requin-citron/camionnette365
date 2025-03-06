@@ -9,18 +9,12 @@
     <h2>Welcome {{ user.get("name") }}!</h2>
 
     <ul>
-    {% if config.get("ENDPOINT") %}
+
       <li><a href='/onenote'>Dump OneNote</a></li>
       <li><a href='/onedrive'>Dump OneDrive</a></li>
       <li><a href='/mail'>Dump Mail</a></li>
       <li><a href='/oneall'>Dump All</a></li>
-    {% endif %}
-
-    {% if config.get("B2C_PROFILE_AUTHORITY") %}
-      <li><a href='{{config.get("B2C_PROFILE_AUTHORITY")}}?client_id={{config.get("CLIENT_ID")}}'>Edit Profile</a></li>
-    {% endif %}
-
-    <li><a href="/logout">Logout</a></li>
+      <li><a href="/logout">Logout</a></li>
     </ul>
 
     <hr>

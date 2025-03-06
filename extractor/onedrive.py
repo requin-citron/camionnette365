@@ -1,5 +1,4 @@
-from os         import path, getcwd
-from app_config import EXTRACT_DIR
+from os                   import path, getcwd
 from extractor.utils      import mkdir_if_exist
 
 import requests
@@ -53,7 +52,7 @@ def test(access_token):
 
     return json_files
 
-def rec_download(access_token, files, fullpath):
+def rec_download(access_token, files, fullpath, debug=False):
     dl_files      = [x for x in files if x[2] is None]
     dirs          = [x for x in files if x[2] is not None]
     non_empty_dir = [x for x in dirs  if x[2]>0]
@@ -63,11 +62,14 @@ def rec_download(access_token, files, fullpath):
 
     for f in dl_files: # dl file
         open(path.join(fullpath,f[1].replace("..","")), "wb").write(download_files(access_token, f[0]))
+        
+        if debug:
+            print(f"OneDrive : {f[1].replace("..","")}")
     
     for d in non_empty_dir:
         rec_download(access_token, get_files(access_token, d[0]), path.join(fullpath, d[1].replace("..","")))
 
-def dump_onedrive(access_token, user):
-    extract_path = path.join(getcwd(), EXTRACT_DIR, "onedrive",user.replace("..",""))
+def dump_onedrive(access_token, user, extract_dir, debug=False):
+    extract_path = path.join(getcwd(), extract_dir, "onedrive",user.replace("..",""))
     mkdir_if_exist(extract_path)
-    rec_download(access_token, get_root(access_token), extract_path) # rec download
+    rec_download(access_token, get_root(access_token), extract_path, debug) # rec download

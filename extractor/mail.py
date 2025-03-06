@@ -1,5 +1,4 @@
 from os              import path, getcwd
-from app_config      import EXTRACT_DIR
 from extractor.utils import mkdir_if_exist
 
 import requests
@@ -55,8 +54,8 @@ def download_attachment(access_token, idmail, idattach):
     return content_attach
 
 
-def dump_mail(access_token, user):
-    extract_path = path.join(getcwd(), EXTRACT_DIR, "mail",user.replace("..",""))
+def dump_mail(access_token, user, extract_dir, debug=False):
+    extract_path = path.join(getcwd(), extract_dir, "mail",user.replace("..",""))
     mkdir_if_exist(extract_path)
     
     for msg in get_message(access_token):
@@ -66,9 +65,13 @@ def dump_mail(access_token, user):
 
         mkdir_if_exist(tmp_path)
         open(path.join(tmp_path,"mail"),"wb").write(content)
+        if debug:
+            print(f"Mail : {id}")
 
         # attachment
         if msg[1]: # hasattachment ?
             for attach in get_attachment(access_token,id):
                 content = download_attachment(access_token, id, attach[0])
                 open(path.join(tmp_path,attach[1].replace("..","")),"wb").write(content)
+                if debug:
+                    print(f"Mail Attach : {attach[1].replace('..','')}")
