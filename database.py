@@ -17,7 +17,7 @@ def create_database(db_path='database.db'):
     cursor.execute('''
         CREATE TABLE tokens (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email         TEXT NOT NULL UNIQUE,
+            email         TEXT NOT NULL,
             refresh_token TEXT NOT NULL,
             target        TEXT NOT NULL,
             client_id     TEXT NOT NULL,
