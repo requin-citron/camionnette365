@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Tokens</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .truncate {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <h1 class="mb-4 text-center">Liste des Tokens</h1>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>id</th>
+                        <th>Email</th>
+                        <th>Refresh Token</th>
+                        <th>Target</th>
+                        <th>Client ID</th>
+                        <th>Secret</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for token in tokens %}
+                    <tr>
+                        {% for field in ['id','email', 'refresh_token', 'target', 'client_id', 'secret'] %}
+                        <td>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="truncate" title="{{ token[field] }}">
+                                    {% if field == 'refresh_token' %}
+                                        {{ token[field][:20] }}...
+                                    {% else %}
+                                        {{ token[field] }}
+                                    {% endif %}
+                                </span>
+                                {% if field not in "id" %}
+                                    <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyToClipboard('{{ token[field] }}')">📋</button>
+                                {% endif %}
+                            </div>
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                let toast = document.createElement('div');
+                toast.className = 'toast align-items-center text-white bg-success border-0 position-fixed bottom-0 end-0 m-3';
+                toast.setAttribute('role', 'alert');
+                toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">Copié dans le presse-papiers !</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>`;
+                document.body.appendChild(toast);
+                new bootstrap.Toast(toast).show();
+            });
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

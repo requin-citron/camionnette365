@@ -36,11 +36,13 @@ def get_attachment(access_token, id):
         timeout=30,
     ).json()
 
-    for attach in json_attach["value"]:
-        attachement.append((
-            attach.get("id"),
-            attach.get("name"),
-        ))
+    if json_attach.get("error") is None:
+
+        for attach in json_attach["value"]:
+            attachement.append((
+                attach.get("id"),
+                attach.get("name"),
+            ))
     
     return attachement
 
