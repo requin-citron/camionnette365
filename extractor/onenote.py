@@ -13,8 +13,10 @@ def get_notebook(access_token):
         timeout=30,
     ).json()
 
-    for data in json_notebook["value"]:
-        notebook.append((data["displayName"], data["id"]))
+
+    if json_notebook.get("value") is not None:
+        for data in json_notebook["value"]:
+            notebook.append((data["displayName"], data["id"]))
 
     return notebook
 

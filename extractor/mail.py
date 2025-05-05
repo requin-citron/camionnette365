@@ -10,12 +10,14 @@ def get_message(access_token):
         headers={'Authorization': 'Bearer ' + access_token},
         timeout=30,
     ).json()
+    
+    if json_message.get("value") is not None:
 
-    for msg in json_message["value"]:
-        message.append((
-            msg["id"],
-            msg["hasAttachments"]
-        ))
+        for msg in json_message["value"]:
+            message.append((
+                msg["id"],
+                msg["hasAttachments"]
+            ))
     
     return message
 

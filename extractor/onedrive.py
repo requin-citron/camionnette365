@@ -5,14 +5,16 @@ import requests
 
 def parse_json_file(json_data):
     files = list()
-    for data in json_data["value"]:
-        files.append(
-            (
-                data["id"],
-                data["name"],
-                data["folder"]["childCount"] if data.get("folder") is not None else None,
+
+    if json_data.get("value") is not None:
+        for data in json_data["value"]:
+            files.append(
+                (
+                    data["id"],
+                    data["name"],
+                    data["folder"]["childCount"] if data.get("folder") is not None else None,
+                )
             )
-        )
     return files
 
 def get_root(access_token):

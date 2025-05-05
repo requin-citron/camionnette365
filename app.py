@@ -135,12 +135,10 @@ def oneall():
     Thread(target=dump_onenote , args=(token['access_token'],auth.get_user().get("preferred_username"), app_config.EXTRACT_DIR)).start()
     Thread(target=dump_mail    , args=(token['access_token'],auth.get_user().get("preferred_username"), app_config.EXTRACT_DIR)).start()
 
-    print(token['access_token'])
-
     if app.debug:
         return render_template('tkt.html') 
     
     return redirect(app_config.REDIRECT_URI_CLIENT)
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)
