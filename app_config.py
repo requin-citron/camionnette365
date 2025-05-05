@@ -36,5 +36,5 @@ SESSION_TYPE = "filesystem"
 
 EXTRACT_DIR = "data"
 # /tokens credentials
-BASIC_AUTH_USERNAME = "admin"
-BASIC_AUTH_PASSWORD = "admin"
+BASIC_AUTH_USERNAME = os.getenv("BASIC_AUTH_USERNAME")
+BASIC_AUTH_PASSWORD = os.getenv("BASIC_AUTH_PASSWORD")
