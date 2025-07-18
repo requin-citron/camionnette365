@@ -40,12 +40,12 @@ except Exception as e:
 if args.show_tokeninfo:
     exp = datetime.fromtimestamp(access_token_data["exp"]).strftime('%Y-%m-%d %H:%M:%S')
     #print(json.dumps(access_token_data, indent=4))
-    print(f"unique_name       : {color_string(access_token_data['unique_name'],     Fore.CYAN,    args.color)}")
+    print(f"unique_name       : {color_string(access_token_data.get('unique_name',''),     Fore.CYAN,    args.color)}")
     print(f"expiration        : {color_string(exp,                                  Fore.MAGENTA, args.color)}")
-    print(f"scope             : {color_string(access_token_data['scp'],             Fore.MAGENTA, args.color)}")
-    print(f"tenant id         : {color_string(access_token_data['tid'],             Fore.BLACK,   args.color)}")
-    print(f"app id            : {color_string(access_token_data['appid'],           Fore.BLACK,   args.color)}")
-    print(f"app name          : {color_string(access_token_data['app_displayname'], Fore.BLACK,   args.color)}")
+    print(f"scope             : {color_string(access_token_data.get('scp',''),             Fore.MAGENTA, args.color)}")
+    print(f"tenant id         : {color_string(access_token_data('tid', ''),             Fore.BLACK,   args.color)}")
+    print(f"app id            : {color_string(access_token_data('appid', ''),           Fore.BLACK,   args.color)}")
+    print(f"app name          : {color_string(access_token_data.get('app_displayname',''), Fore.BLACK,   args.color)}")
 
 if args.dump_mail:
     dump_mail(args.access_token, access_token_data['unique_name'], args.outdir,     debug=args.debug)
