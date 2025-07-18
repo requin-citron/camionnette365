@@ -43,8 +43,8 @@ if args.show_tokeninfo:
     print(f"unique_name       : {color_string(access_token_data.get('unique_name',''),     Fore.CYAN,    args.color)}")
     print(f"expiration        : {color_string(exp,                                  Fore.MAGENTA, args.color)}")
     print(f"scope             : {color_string(access_token_data.get('scp',''),             Fore.MAGENTA, args.color)}")
-    print(f"tenant id         : {color_string(access_token_data('tid', ''),             Fore.BLACK,   args.color)}")
-    print(f"app id            : {color_string(access_token_data('appid', ''),           Fore.BLACK,   args.color)}")
+    print(f"tenant id         : {color_string(access_token_data.get('tid', ''),             Fore.BLACK,   args.color)}")
+    print(f"app id            : {color_string(access_token_data.get('appid', ''),           Fore.BLACK,   args.color)}")
     print(f"app name          : {color_string(access_token_data.get('app_displayname',''), Fore.BLACK,   args.color)}")
 
 if args.dump_mail:
